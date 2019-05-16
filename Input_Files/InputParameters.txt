@@ -1,0 +1,186 @@
+##NOTE: Comments start with "#" Parameter definitions that are commented out are additional examples.
+
+########Parameters for generating cuts
+
+#BkgMode = 0 -- Generate cuts without subtracting background
+#BkgMode = 1 -- Generate cuts including cuts for background determination
+
+BkgMode=1
+
+
+#QMode=0 -- Generate cuts for a given reduced reciprocal wavevector
+#QMode=1 -- Generate cuts for a list of wavevector read from a file (textfile_for_selectedQs must be specified)
+
+QMode=1
+
+#Name and directory for the sqw file or nix file
+#sqw_path=E:/IPTS-12942/UD55_50meV_10K.sqw
+
+sqw_path=E:/MantidDataFile/LSNO_300K_BondStretching.nxs
+
+
+
+#This is where the constant-energy cuts and everything else related to them (e.g. files 
+#for background calculations, background-subtracted cuts, plots, etc. are stored.
+#projectRootDir=E:/Data_IPTS-12942_UD55_55meV_10K/
+projectRootDir=E:/MantidDataTest/
+
+
+
+#Dataset name. All data and its processing for a given set of cuts will be stored in this 
+#subdirectory (see instructions)
+#ProcessedDataName=bendingDispDiagSingle
+ProcessedDataName=MantidTest
+
+#Maximum allowed Ratio of Error to Intensity. Datapoints for which it is larger are thrown out (not saved) and do not count 
+#towards MinPointsInDataFile.
+ErrorToIntensityMaxRatio=0.3
+
+
+
+
+#Directory where all input files except this file are stored. E.g. the text file listing 
+#Q-values to be explored.
+InputFilesDir=E:/Input_Files/
+
+
+
+#Energy start, end and step for contant Q cuts in Horace. Note that randomly generated 
+#cuts for background calculation will automatically have a bigger range.
+e_start=20
+e_end=100
+e_step=1.25
+
+
+
+#Binning
+Deltah=0.1
+Deltak=0.1
+Deltal=3.5
+
+
+
+#UV matrix
+Projection_u=1,0,0
+Projection_v=0,1,0
+
+
+
+#Minimum number of points in a data file. If the number of points with reasonable error 
+#bar (<30% of the value) is smaller, the cut is NOT saved.
+MinPointsInDataFile=10
+
+
+
+#Maximum of the Y-axis (scattering intensity) for plots
+maxY=0.04
+
+
+
+#Path to the Mantid library (Needed only when nxs file is used)
+mantidFolder=C:/MantidInstall/bin/
+
+
+
+#Path to the folder with the Matlab routine Getslice (Needed only when sqw file is used)
+matlabFolder=C:/Users/Dmitry/Desktop/neutron/RSE/Matlab Code
+
+
+
+## For reading qs from a file; Not needed for single reduced q mode
+#textfile_for_selectedQs=bendingDispDiagSingle.txt
+
+textfile_for_selectedQs=MantidTest.txt
+
+
+######
+
+## For single reduced q slices; Not needed if qs are read from a file
+#reduced wavevector components. Not relevant if you want to look at wavevectors in the text file above.
+
+qh=0
+qk=0
+ql=0
+
+
+
+#Define range in reciprocal space where you want to explore the data. The wavevectors are: 
+#(qh+H,qk+K,ql+L) Not relevant if you want to look at wavevectors in the text file above. H values are 
+#integers between h_start and h_end, etc.
+h_start=-6
+h_end=2
+k_start=-2
+k_end=1
+l_start=-1
+l_end=13
+######
+
+
+##############Shared between Background and Multizone fit
+
+#for fitting
+InitialAmplitude=0.01
+
+
+
+#Number of fitting iterations
+NumberofIter=3
+
+
+
+#First character in the data file. “H” is hardcoded in current version and should not be 
+#changed
+dataFileNameStart=H
+
+##########Parameters for Background
+
+#Lattice constants of the sample
+a=3.8831
+b=3.8831
+c=9.5515
+
+
+
+#Maximum number of attempts to generate a background file (too prevent infinite loop if 
+#all attempts fail)
+NumberOfTries=100
+
+
+
+#Maximum number of Background files if they are generated randomly (as in the Standard module)
+
+maxFiles=10
+
+
+#Approximate instrument resolution FWHM, used for smoothing of the background data. The 
+#best values here are a bit larger than the actual resolution, but ultimately it should be 
+#such that the smoothing of the background files works well.
+
+Resolution=8
+
+
+
+#Minimum number of points in a background data file. 
+#If the number of points with reasonable error #bar (<30% of the value) is smaller, the cut is NOT saved.
+
+MinPointsInDataBackgroundFile=10
+
+#Minimal peak width used in the smoothing of the background data. (see Release Notes)
+
+MinPeakWidthForSmoothing=4
+
+
+
+#Algorithm used for calculating background (see release notes)
+#BackgroundAlgorithm=Background32meVQ
+BackgroundAlgorithm=Standard
+
+#########Parameters for multizone fit
+
+#Lower bound for peak width in the multilane fit
+WidthLowerBound=0.6
+
+
+
+#Name of the file with position guesses for multizone fitting.
+fileWithGuesses=_PositionGuesses_bending.txt
