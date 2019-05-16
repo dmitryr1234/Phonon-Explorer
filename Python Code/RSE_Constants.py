@@ -15,7 +15,7 @@ import os.path
 class RSE_Constants():
 
 
-    INPUTS_PATH_MAIN = os.path.normpath('C:/Users/Dmitry/Desktop/neutron/Phonon Explorer/Input_Files')
+    INPUTS_PATH_MAIN = os.path.normpath('/home/asquiggle/Phonon-Explorer/Input_Files')
     INPUTS_FILENAME_MAIN = r'InputParameters.txt'
     FITTING_PARAM_FILE = r'_FittingParam.txt'
     

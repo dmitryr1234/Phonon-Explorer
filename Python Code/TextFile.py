@@ -31,7 +31,7 @@ class Parameters(TextFile):
         TextFile.__init__(self,FolderName,FileName)
 #        print(self.foldername)
 #        print(self.filename)
-        with open(os.path.join(self.foldername,self.filename)) as f:
+        with open(os.path.join(self.foldername,self.filename), mode='r', encoding='cp1252') as f:
              parameters = f.read().splitlines()
         
 #        for i in range(0,len(parameters)):

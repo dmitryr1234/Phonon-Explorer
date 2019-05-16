@@ -5,7 +5,7 @@
 #BkgMode = 0 -- Generate cuts without subtracting background
 #BkgMode = 1 -- Generate cuts including cuts for background determination
 
-BkgMode=1
+BkgMode=0
 
 
 #QMode=0 -- Generate cuts for a given reduced reciprocal wavevector
@@ -14,16 +14,16 @@ BkgMode=1
 QMode=1
 
 #Name and directory for the sqw file or nix file
-#sqw_path=E:/IPTS-12942/UD55_50meV_10K.sqw
+#sqw_path=
 
-sqw_path=E:/MantidDataFile/LSNO_300K_BondStretching.nxs
+sqw_path=/home/asquiggle/neutron_data/IPTS-18642/Horace/LSNO_120meV_240K_Sep.sqw
 
 
 
 #This is where the constant-energy cuts and everything else related to them (e.g. files 
 #for background calculations, background-subtracted cuts, plots, etc. are stored.
 #projectRootDir=E:/Data_IPTS-12942_UD55_55meV_10K/
-projectRootDir=E:/MantidDataTest/
+projectRootDir=/home/asquiggle/neutron_data/IPTS-18642/RSE_Data/IPTS-18642_LSNO_120meV_240K/phono_explore_test
 
 
 
@@ -34,15 +34,14 @@ ProcessedDataName=MantidTest
 
 #Maximum allowed Ratio of Error to Intensity. Datapoints for which it is larger are thrown out (not saved) and do not count 
 #towards MinPointsInDataFile.
-ErrorToIntensityMaxRatio=0.3
+ErrorToIntensityMaxRatio=0.3
 
 
 
 
 #Directory where all input files except this file are stored. E.g. the text file listing 
 #Q-values to be explored.
-InputFilesDir=E:/Input_Files/
-
+InputFilesDir=/home/asquiggle/Phonon-Explorer/Input_Files
 
 
 #Energy start, end and step for contant Q cuts in Horace. Note that randomly generated 
@@ -83,7 +82,7 @@ mantidFolder=C:/MantidInstall/bin/
 
 
 #Path to the folder with the Matlab routine Getslice (Needed only when sqw file is used)
-matlabFolder=C:/Users/Dmitry/Desktop/neutron/RSE/Matlab Code
+matlabFolder=/home/asquiggle/neutron_rewrite/RSE/Matlab Code
 
 
 
