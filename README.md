@@ -6,6 +6,7 @@ create working branch
 cleanup all unused files on master branch
   --delete InputParameters.json
 "^M" line endings in .txt file - ms/dos
+     - ran dos2unix on InputParameters.txt to cleanup endings.  Issue or not?
 paths need to be updated in 2 places:
       - RSE_Constants - lines 18 and 40
       - InputParameters.txt - lines 17, 19, 25, 26, 44, 80, 85	
