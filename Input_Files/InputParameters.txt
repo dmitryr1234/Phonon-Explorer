@@ -5,7 +5,7 @@
 #BkgMode = 0 -- Generate cuts without subtracting background
 #BkgMode = 1 -- Generate cuts including cuts for background determination
 
-BkgMode=0
+BkgMode=1
 
 
 #QMode=0 -- Generate cuts for a given reduced reciprocal wavevector
@@ -30,7 +30,7 @@ projectRootDir=/home/asquiggle/neutron_data/IPTS-18642/RSE_Data/IPTS-18642_LSNO_
 #Dataset name. All data and its processing for a given set of cuts will be stored in this 
 #subdirectory (see instructions)
 #ProcessedDataName=bendingDispDiagSingle
-ProcessedDataName=MantidTest
+ProcessedDataName=PythonTest	
 
 #Maximum allowed Ratio of Error to Intensity. Datapoints for which it is larger are thrown out (not saved) and do not count 
 #towards MinPointsInDataFile.
@@ -41,7 +41,8 @@ ErrorToIntensityMaxRatio=0.3
 
 #Directory where all input files except this file are stored. E.g. the text file listing 
 #Q-values to be explored.
-InputFilesDir=/home/asquiggle/Phonon-Explorer/Input_Files
+#NOTE: MUST HAVE PATH SEPARATOR AT END - "/" or "\"
+InputFilesDir=/home/asquiggle/Phonon-Explorer/Input_Files/
 
 
 #Energy start, end and step for contant Q cuts in Horace. Note that randomly generated 
@@ -89,7 +90,7 @@ matlabFolder=/home/asquiggle/neutron_rewrite/RSE/Matlab Code
 ## For reading qs from a file; Not needed for single reduced q mode
 #textfile_for_selectedQs=bendingDispDiagSingle.txt
 
-textfile_for_selectedQs=MantidTest.txt
+textfile_for_selectedQs=Selected_files_00_Diag.txt
 
 
 ######
@@ -182,4 +183,4 @@ WidthLowerBound=0.6
 
 
 #Name of the file with position guesses for multizone fitting.
-fileWithGuesses=_PositionGuesses_bending.txt
+fileWithGuesses=_PositionGuesses.txt

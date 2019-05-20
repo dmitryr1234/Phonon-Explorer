@@ -322,7 +322,7 @@ class CollectionOfQs(Dataset):
 
     def Generate(self):
         bin_e=[self.params.e_start,self.params.e_step,self.params.e_end]        
-        Qs=np.genfromtxt(self.params.path_InputFiles+self.params.textfile_for_selectedQs)
+        Qs=np.genfromtxt(os.path.join(self.params.path_InputFiles+self.params.textfile_for_selectedQs))
         QHlist=Qs[:,][:,0]
         QKlist=Qs[:,][:,1]
         QLlist=Qs[:,][:,2]

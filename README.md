@@ -12,12 +12,10 @@ paths need to be updated in 2 places:
       - InputParameters.txt - lines 17, 19, 25, 26, 44, 80, 85	
 Encoding needs to be specified as utf-8.  Dont use Windows 1251 encodings
 	 - specifically quotes, 0x93 byte doesnt exist in utf-8, 0x22 i believe.
-	 - .open(..., 'encoding=cp1251')
+	 - .open(..., 'encoding=cp1251') Specifying encoding isnt a great option as files wont always be cp1251 encoded, usually will be utf-8 characters and this won't be issue
 	 - this has to be worked out for python2.7 and python3.6
 
-Errors Encountered on Running
-
-Command: python3.6 GenerateConstQCuts.py
+ERROR running: python3.6 GenerateConstQCuts.py
 
 [asquiggle@cu-engr2-1-14-10 Python Code]$ python3.6 GenerateConstQCuts.py
 Traceback (most recent call last):
@@ -29,7 +27,9 @@ Traceback (most recent call last):
     (result, consumed) = self._buffer_decode(data, self.errors, final)
 UnicodeDecodeError: 'utf-8' codec can't decode byte 0x93 in position 3161: invalid start byte
 
-CURRENT ERROR:
+ERROR running: python3.6 GenerateConstQCuts.py
+
+filename concatenation, missing a path separator, result cant find a file
 
 [asquiggle@cu-engr2-1-14-10 Python Code]$ python3.6 GenerateConstQCuts.py
 Traceback (most recent call last):
@@ -44,3 +44,45 @@ Traceback (most recent call last):
   File "/usr/local/lib64/python3.6/site-packages/numpy/lib/_datasource.py", line 618, in open
     raise IOError("%s not found." % path)
 OSError: /home/asquiggle/Phonon-Explorer/Input_FilesMantidTest.txt not found.
+
+ERROR running: python3.6 GenerateConstQCuts.py
+
+line 21, explore
+Traceback (most recent call last):
+  File "GenerateConstQCuts.py", line 37, in <module>
+    randomFiles=DataBackgroundQs(params)
+  File "/home/asquiggle/Phonon-Explorer/Python Code/Data.py", line 349, in __init__
+    self.params.ReadBackgroundParams()
+  File "/home/asquiggle/Phonon-Explorer/Python Code/TextFile.py", line 84, in ReadBackgroundParams
+    parameters = f.read().splitlines()
+  File "/usr/lib64/python3.6/codecs.py", line 321, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x93 in position 3214: invalid start byte
+
+ERROR running: python3.6 MultiFit.py
+
+2019-05-20 11:12:22.756039
+Parameters
+Traceback (most recent call last):
+  File "MultiFit.py", line 28, in <module>
+    params.ReadMultizoneFitParams()
+  File "/home/asquiggle/Phonon-Explorer/Python Code/TextFile.py", line 107, in ReadMultizoneFitParams
+    parameters = f.read().splitlines()
+  File "/usr/lib64/python3.6/codecs.py", line 321, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x93 in position 3227: invalid start byte
+
+ERROR running: python3.6 MultiFit.py
+
+2019-05-20 11:12:55.630511
+Parameters
+WARNING: Position Guesses not specified
+DataSmall_q
+InitialGuesses
+Traceback (most recent call last):
+  File "MultiFit.py", line 36, in <module>
+    InitialGuesses=InitialGuesses(params,data)
+  File "/home/asquiggle/Phonon-Explorer/Python Code/FitParameters.py", line 90, in __init__
+    self.NumberofPeaks=params.NumberofPeaks
+AttributeError: 'Parameters' object has no attribute 'NumberofPeaks'
+

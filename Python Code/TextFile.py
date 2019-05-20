@@ -80,7 +80,7 @@ class Parameters(TextFile):
         self.dataFileNameStart=self.evalWarning(self.ParseByKeyword("dataFileNameStart",parameters),"H")
         
     def ReadBackgroundParams(self):
-        with open(os.path.join(self.foldername,self.filename)) as f:
+        with open(os.path.join(self.foldername,self.filename), encoding="cp1251") as f:
              parameters = f.read().splitlines()
 
         self.a=eval(self.evalError(self.ParseByKeyword("a",parameters)))
@@ -103,7 +103,7 @@ class Parameters(TextFile):
         self.ReadSharedParams(parameters)
 
     def ReadMultizoneFitParams(self):
-        with open(os.path.join(self.foldername,self.filename)) as f:
+        with open(os.path.join(self.foldername,self.filename), encoding="cp1251") as f:
              parameters = f.read().splitlines()
 
         self.WidthLowerBound=eval(self.ParseByKeyword("WidthLowerBound",parameters))

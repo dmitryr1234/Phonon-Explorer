@@ -1,0 +1,4 @@
+import numpy
+class FitFuncTemp:
+    def func1(self,Energy,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26,p27,p28,p29,p30):
+        return (p1/p3)*numpy.exp(-(numpy.power(((Energy-p2)/p3),2)))+(p4/p6)*numpy.exp(-(numpy.power(((Energy-p5)/p6),2)))+(p7/p9)*numpy.exp(-(numpy.power(((Energy-p8)/p9),2)))+(p10/p12)*numpy.exp(-(numpy.power(((Energy-p11)/p12),2)))+(p13/p15)*numpy.exp(-(numpy.power(((Energy-p14)/p15),2)))+(p16/p18)*numpy.exp(-(numpy.power(((Energy-p17)/p18),2)))+(p19/p21)*numpy.exp(-(numpy.power(((Energy-p20)/p21),2)))+(p22/p24)*numpy.exp(-(numpy.power(((Energy-p23)/p24),2)))+(p25/p27)*numpy.exp(-(numpy.power(((Energy-p26)/p27),2)))+(p28/p30)*numpy.exp(-(numpy.power(((Energy-p29)/p30),2)))
