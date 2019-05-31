@@ -88,7 +88,7 @@ class Dataset: #Dataset can be either a single cut at one Q or several cuts put 
         self.Energy=Neng
         self.Error=Nerr
 
-    def makeRawSlice(self, bin_h, bin_k, bin_l, bin_e,folder,file,minPoints):
+    def makeRawSlice(self, bin_h, bin_k, bin_l, bin_e,folder,file,minPoints,mult=1):
         if self.params.dataFileType=="sqw":
             self.makeRawSliceSQW(bin_h, bin_k, bin_l, bin_e,minPoints)
         if self.params.dataFileType=="nxs":
@@ -97,7 +97,7 @@ class Dataset: #Dataset can be either a single cut at one Q or several cuts put 
         FileIsGood=self.dataIsValid(minPoints)
         if FileIsGood:
             fileForSlice=DataTextFile(folder,file)
-            fileForSlice.Write(self.Energy,self.Intensity,self.Error)
+            fileForSlice.Write(self.Energy,mult*self.Intensity,mult*self.Error)
             return 0
         return 1
   
@@ -404,13 +404,15 @@ class DataBackgroundQs(Dataset):
         # Now do the random files; Try two times maxFiles, break when number of successfully saved files equals to maxFiles
 
         for i in range (0,2*self.params.maxFiles):
-            if self.GenerateBackgroundDataFile(folder)==0:
+            if self.GenerateBackgroundDataFile(folder,i)==0:
                 numFiles=numFiles+1
+            else:
+                break
             if numFiles==self.params.maxFiles:
                 break
         return
     
-    def GenerateBackgroundDataFile(self,folder):
+    def GenerateBackgroundDataFile(self,folder,index):
 #        Angles=self.GeneratePhiTheta()
 #        Phi=Angles[0]
 #        Theta=Angles[1]
@@ -418,8 +420,9 @@ class DataBackgroundQs(Dataset):
 #        thetaInDegrees=Theta*180/math.pi
         sys.path.insert(0,"Background Tools")
         B=__import__(self.params.BackgroundAlgorithm)
-        BkgQ=B.BackgroundQ(self.H,self.K,self.L,self.params)
-
+        BkgQ=B.BackgroundQ(self.H,self.K,self.L,self.params,index)
+        if BkgQ.flag==1:
+            return 3
         #CalcQslash takes input in reciprocal angstoms, result returned in r.l.u
 #        Qslash=self.CalcQslash(self.H*2*math.pi/self.params.a,self.K*2*math.pi/self.params.b,self.L*2*math.pi/self.params.c,Phi,Theta)
 #  REPLACE this line with the following that is commented out
@@ -431,7 +434,7 @@ class DataBackgroundQs(Dataset):
         bin_l=[BkgQ.Qslash[2]-self.params.Deltal, BkgQ.Qslash[2]+self.params.Deltal]
         try:
 #            print(folder+BkgQ.fileName)
-            return self.makeRawSlice(bin_h, bin_k, bin_l, self.bin_e,folder,BkgQ.fileName,self.params.MinPointsInDataBackgroundFile)#,eng)
+            return self.makeRawSlice(bin_h, bin_k, bin_l, self.bin_e,folder,BkgQ.fileName,self.params.MinPointsInDataBackgroundFile,BkgQ.mult)#,eng)
 
         except Exception as e:
             print(e)
