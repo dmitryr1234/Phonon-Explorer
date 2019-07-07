@@ -21,9 +21,6 @@ class BackgroundQ:
         self.index=index
         self.mult=1
         self.flag=0
-        if self.index>6:
-            self.flag=1
-            return
         #CalcQslash takes input in reciprocal angstoms, result returned in r.l.u
         self.Qslash=self.CalcQslash()
 #        self.fileName=str("H%5.2f K%5.2f L%5.2f" % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))
@@ -40,14 +37,17 @@ class BackgroundQ:
     def CalcQslash(self):
 
 #a-lattice param along proj.u, b- along proj.v
-# 510
-#5-10
-#6 0 0
-#6 -1 0
-#6 1 0
-#710
-#7-10
-       
+
+#Users edit this function ONLY
+#
+
+        if self.index>6: #This statement controls when to stop generating Q's. In this
+            self.flag=1    #example it will stop after 7 times (6+1).
+            return
+
+# Here we want to read off background from the minimum intensty of
+# the following Q's: [-5,1,0],[-5,-1,0],[-6,0,0],[-6,-1,0],[-6,1,0],[-7,1,0], and [-7,-1,0]
+
         hs=[-5,-5,-6,-6,-6,-7,-7]
         ks=[1,-1,0,-1,1,1,-1]
 
@@ -71,15 +71,4 @@ class BackgroundQ:
         if self.H<-6 and hslash==-7:
             self.mult=1+(abs(self.H)-7)*.2
             
-#        print(self.H,hslash,self.mult)
-        
-#        Qslash=[-4,0,7.5]
-#        Qslash=[-5,0,1.5]
-#        if self.H<-5:
-#            Qslash=[-5,0,5.8]
-#            Qslash=[-5.5,0,1.5]
-#        Qs_s0=Qu**2+Qv**2+Qp**2
-#        Qs_s=Qu1slash**2+Qv1slash**2+Qp1slash**2
-#        print(math.sqrt(Qs_s))
-#        print(math.sqrt(Qs_s0))
         return Qslash
