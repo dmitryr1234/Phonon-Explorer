@@ -94,6 +94,7 @@ class InitialGuesses(FitParameters):
         self.positions=numpy.zeros(self.NumberofPeaks)+params.positionGuesses
         self.pguess=numpy.zeros(3*self.NumberofPeaks+self.NumberofPeaks*(self.NumberofDatasets-1))
         self.buildInitArray(self.NumberofPeaks,self.NumberofDatasets,self.positions)
+
  
     def buildInitArray(self,NumberofPeaks,NumberofDatasets,positions):
         
