@@ -4,66 +4,65 @@
 
 #BkgMode = 0 -- Generate cuts without subtracting background
 #BkgMode = 1 -- Generate cuts including cuts for background determination
-
 BkgMode=1
 
 
 #QMode=0 -- Generate cuts for a given reduced reciprocal wavevector
 #QMode=1 -- Generate cuts for a list of wavevector read from a file (textfile_for_selectedQs must be specified)
-
 QMode=1
 
 #Name and directory for the sqw file or nix file
-#sqw_path=E:/IPTS-12942/UD55_50meV_10K.sqw
-
-sqw_path=E:/MantidDataFile/LSNO_300K_BondStretching.nxs
+#sqw_path=/SNS/ARCS/IPTS-24081/shared/combined-ipts22361/merged_mde_Ei110_T=5k_hhl_rotation.nxs
+sqw_path=/SNS/ARCS/IPTS-24081/shared/combined/zz10_5K_110meV.nxs
 
 
 
 #This is where the constant-energy cuts and everything else related to them (e.g. files 
 #for background calculations, background-subtracted cuts, plots, etc. are stored.
-#projectRootDir=E:/Data_IPTS-12942_UD55_55meV_10K/
-projectRootDir=E:/MantidDataTest/
+projectRootDir=/SNS/ARCS/IPTS-24081/shared/test/work-110meV-5K_00L/
 
 
 
 #Dataset name. All data and its processing for a given set of cuts will be stored in this 
 #subdirectory (see instructions)
-#ProcessedDataName=bendingDispDiagSingle
-ProcessedDataName=MantidTest
+ProcessedDataName=data
 
 #Maximum allowed Ratio of Error to Intensity. Datapoints for which it is larger are thrown out (not saved) and do not count 
 #towards MinPointsInDataFile.
-ErrorToIntensityMaxRatio=0.3
+ErrorToIntensityMaxRatio=0.3
+
 
 
 
 
 #Directory where all input files except this file are stored. E.g. the text file listing 
 #Q-values to be explored.
-InputFilesDir=E:/Input_Files/
+InputFilesDir=/SNS/ARCS/IPTS-24081/shared/test/work-110meV-5K_00L/Input/
 
 
 
 #Energy start, end and step for contant Q cuts in Horace. Note that randomly generated 
 #cuts for background calculation will automatically have a bigger range.
-e_start=20
-e_end=100
-e_step=1.25
 
+e_start=50
+e_end=90
+e_step=3
 
 
 #Binning
-Deltah=0.1
-Deltak=0.1
-Deltal=3.5
-
+Deltah=0.3
+Deltak=0.3
+Deltal=0.4
 
 
 #UV matrix
-Projection_u=1,0,0
-Projection_v=0,1,0
-
+# Not used in the current version when reading from .nxs files (orientation is stored in the data file).
+#Projection_u=1,0,0
+#Projection_v=0,0,1
+#Projection_u=0.6358,0.0071,1.0000
+#Projection_v=0.2639,0.0073,-1.0000
+Projection_u=0.5365,0.0060,0.8439
+Projection_v=0.2552,0.0071,-0.09669
 
 
 #Minimum number of points in a data file. If the number of points with reasonable error 
@@ -73,24 +72,24 @@ MinPointsInDataFile=10
 
 
 #Maximum of the Y-axis (scattering intensity) for plots
-maxY=0.04
+maxY=0.1
 
 
 
 #Path to the Mantid library (Needed only when nxs file is used)
-mantidFolder=C:/MantidInstall/bin/
+mantidFolder=/opt/Mantid/bin/mantid
 
 
 
 #Path to the folder with the Matlab routine Getslice (Needed only when sqw file is used)
-matlabFolder=C:/Users/Dmitry/Desktop/neutron/RSE/Matlab Code
+matlabFolder=/home/ty/research/projects/ins/Phonon-Explorer/Matlab Code
 
 
 
 ## For reading qs from a file; Not needed for single reduced q mode
 #textfile_for_selectedQs=bendingDispDiagSingle.txt
 
-textfile_for_selectedQs=MantidTest.txt
+textfile_for_selectedQs=input_qpoints
 
 
 ######
@@ -98,21 +97,20 @@ textfile_for_selectedQs=MantidTest.txt
 ## For single reduced q slices; Not needed if qs are read from a file
 #reduced wavevector components. Not relevant if you want to look at wavevectors in the text file above.
 
-qh=0
+qh=0.2
 qk=0
 ql=0
-
 
 
 #Define range in reciprocal space where you want to explore the data. The wavevectors are: 
 #(qh+H,qk+K,ql+L) Not relevant if you want to look at wavevectors in the text file above. H values are 
 #integers between h_start and h_end, etc.
-h_start=-6
-h_end=2
-k_start=-2
-k_end=1
-l_start=-1
-l_end=13
+h_start=0
+h_end=0
+k_start=-3
+k_end=-5
+l_start=-5
+l_end=5
 ######
 
 
@@ -128,7 +126,7 @@ NumberofIter=3
 
 
 
-#First character in the data file. “H” is hardcoded in current version and should not be 
+#First character in the data file. Â“HÂ” is hardcoded in current version and should not be 
 #changed
 dataFileNameStart=H
 
@@ -149,14 +147,14 @@ NumberOfTries=100
 
 #Maximum number of Background files if they are generated randomly (as in the Standard module)
 
-maxFiles=10
+maxFiles=1
 
 
 #Approximate instrument resolution FWHM, used for smoothing of the background data. The 
 #best values here are a bit larger than the actual resolution, but ultimately it should be 
 #such that the smoothing of the background files works well.
 
-Resolution=8
+Resolution=2.5
 
 
 
@@ -167,13 +165,13 @@ MinPointsInDataBackgroundFile=10
 
 #Minimal peak width used in the smoothing of the background data. (see Release Notes)
 
-MinPeakWidthForSmoothing=4
+MinPeakWidthForSmoothing=6
 
 
 
 #Algorithm used for calculating background (see release notes)
-#BackgroundAlgorithm=Background32meVQ
-BackgroundAlgorithm=Standard
+BackgroundAlgorithm=Background70meVQ0x25
+#BackgroundAlgorithm=Standard
 
 #########Parameters for multizone fit
 
@@ -183,4 +181,4 @@ WidthLowerBound=0.6
 
 
 #Name of the file with position guesses for multizone fitting.
-fileWithGuesses=_PositionGuesses_bending.txt
+fileWithGuesses=input_positionguesses

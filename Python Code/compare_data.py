@@ -14,18 +14,23 @@ from Display import *
 from collections import namedtuple
 import matplotlib.pyplot as plt
 
-location_ForPlots='E:/Data_IPTS-12942_UD55_55meV_450K/BendingXDist/temp/'
+expt_root = '/SNS/ARCS/IPTS-24081/'
+location_ForPlots=expt_root + 'shared/test/work-compare-subtr_background_dHdK_0.05/'
 
-datasetdir1='E:/Data_IPTS-12942_UD55_55meV_10K/BendingXDist/subtr_background/'
-datasetdir2='E:/Data_IPTS-12942_UD55_55meV_450K/BendingXDist/subtr_background/'
+datasetdir1=expt_root + 'shared/test/work-116meV-5K_dHdK_0.05/data/subtr_background/'
+datasetlabel1='5 K'
+T1=1
+datasetdir2=expt_root + 'shared/test/work-116meV-100K_dHdK_0.05/data/subtr_background/'
+datasetlabel2='100 K'
+T2=1
 
       
 filenames1=[file for file in os.listdir(datasetdir1) if file.startswith("H")and not file.endswith("pdf")]
 filenames2=[file for file in os.listdir(datasetdir2) if file.startswith("H")and not file.endswith("pdf")]
 print (filenames1)
 print (filenames2)
-T1=10
-T2=450
+T1=1
+T2=1
 
 font = {'family': 'serif',
         'color':  'darkred',
@@ -55,12 +60,13 @@ for i in range(0,len(filenames1)):
 #               print 1.0+1/(np.exp(energy2[ii]/(0.08617*T2))-1.0)
 
            plt.figure(figsize=(8.27,11.69,))
-           plt.errorbar(energy1,intensity1,error1,fmt='o')
-           plt.errorbar(energy2,intensity2,error2,fmt='*')
+           plt.errorbar(energy1,intensity1,error1,fmt='o',label=datasetlabel1)
+           plt.errorbar(energy2,intensity2,error2,fmt='*',label=datasetlabel2)
            plt.xlabel('Energy')
            plt.ylabel('Intensity')
            plt.grid() 
-           plt.title(filenames1[i]+"  dh=0.2 dk=0.2 dl=0.5")
+           plt.title(filenames1[i]+"  dh=0.05 dk=0.05 dl=4")
+           plt.legend()
            #plt.text(20, 0.001,filenames1[i],fontdict=font)
            plt.savefig(location_ForPlots+filenames1[i]+'a4'+'portrait'+'.pdf')
            #plt.show()

@@ -47,7 +47,7 @@ class Dataset: #Dataset can be either a single cut at one Q or several cuts put 
             from skimage import transform
             from mantid.simpleapi import LoadMD, CutMD#, ConvertToMD, BinMD, ConvertUnits, Rebin
 
-            fileHandle=LoadMD(self.params.sqw_path,FileBackEnd=True)
+            fileHandle=LoadMD(self.params.sqw_path)
             RSE_Constants.fileHandle=fileHandle
             RSE_Constants.FLAG=1
             
@@ -102,14 +102,35 @@ class Dataset: #Dataset can be either a single cut at one Q or several cuts put 
         return 1
   
     def makeRawSliceNXS(self, bin_h, bin_k, bin_l, bin_e,minPoints):
-        from mantid.simpleapi import CutMD#, ConvertToMD, BinMD, ConvertUnits, Rebin
+        from mantid.simpleapi import MDNorm, CutMD, mtd, ConvertMDHistoToMatrixWorkspace, SaveAscii#, ConvertToMD, BinMD, ConvertUnits, Rebin
         from mantid.api import Projection
-        P=Projection(self.params.Projection_u,self.params.Projection_v)
-        Slice00=CutMD(RSE_Constants.fileHandle,Projection=P.createWorkspace(OutputWorkspace='proj_ws'),PBins=(bin_h, bin_k, bin_l, bin_e),NoPix=True)
-        out=self.SaveMDToAscii(Slice00)
-        self.Error=100*out[:,0]
-        self.Intensity=100*out[:,1]
-        self.Energy=out[:,2]
+        print("bin_h: [{:01.3f}, {:01.3f}]".format(bin_h[0], bin_h[1]))
+        print("bin_k: [{:01.3f}, {:01.3f}]".format(bin_k[0], bin_k[1]))
+        print("bin_l: [{:01.3f}, {:01.3f}]".format(bin_l[0], bin_l[1]))
+        print("bin_e: [{:01.3f}, {:01.3f}, {:01.3f}]".format(bin_e[0], bin_e[1], bin_e[2]))
+        #P=Projection(self.params.Projection_u,self.params.Projection_v)
+        #Slice00=CutMD(RSE_Constants.fileHandle,Projection=P.createWorkspace(OutputWorkspace='proj_ws'),PBins=(bin_h, bin_k, bin_l, bin_e),NoPix=True)
+        projection={'QDimension0':'1,0,0','QDimension1':'0,1,0','QDimension2':'0,0,1'}
+        MDNorm(RSE_Constants.fileHandle, #SolidAngleWorkspace='van138487', 
+        Dimension0Name='QDimension0',Dimension0Binning="{},{}".format(bin_h[0], bin_h[1]), 
+        Dimension1Name='QDimension1',Dimension1Binning="{},{}".format(bin_k[0], bin_k[1]), 
+        Dimension2Name='QDimension2',Dimension2Binning="{},{}".format(bin_l[0], bin_l[1]), 
+        Dimension3Name='DeltaE', Dimension3Binning="{},{},{}".format(bin_e[0], bin_e[1], bin_e[2]), 
+        OutputWorkspace='proj_ws', OutputDataWorkspace='jd', OutputNormalizationWorkspace='jn',**projection)
+        proj_ws_2d_h = ConvertMDHistoToMatrixWorkspace(InputWorkspace='proj_ws', OutputWorkspace='proj_ws_2d')
+        E_edges = proj_ws_2d_h.extractX() # Bin edges
+        E_centers = (E_edges[0][:-1] + E_edges[0][1:])/2
+        I = 1000 * proj_ws_2d_h.extractY()[0]
+        e = 1000 * proj_ws_2d_h.extractE()[0]
+        self.Error = e
+        self.Intensity = I
+        self.Energy = E_edges[0][:-1]
+        #Slice01=mtd['proj_ws']
+        #out=self.SaveMDToAscii(Slice00)
+        #out=self.SaveMDToAscii(Slice01)
+        #self.Error=100*out[:,0]
+        #self.Intensity=100*out[:,1]
+        #self.Energy=out[:,2]
 #        print (self.Intensity)
         return 1
     
@@ -323,6 +344,7 @@ class CollectionOfQs(Dataset):
     def Generate(self):
         bin_e=[self.params.e_start,self.params.e_step,self.params.e_end]        
         Qs=np.genfromtxt(self.params.path_InputFiles+self.params.textfile_for_selectedQs)
+        print(str(Qs))
         QHlist=Qs[:,][:,0]
         QKlist=Qs[:,][:,1]
         QLlist=Qs[:,][:,2]
@@ -411,7 +433,7 @@ class DataBackgroundQs(Dataset):
             if numFiles==self.params.maxFiles:
                 break
         return
-    
+
     def GenerateBackgroundDataFile(self,folder,index):
 #        Angles=self.GeneratePhiTheta()
 #        Phi=Angles[0]
@@ -419,7 +441,11 @@ class DataBackgroundQs(Dataset):
 #        phiInDegrees=Phi*180/math.pi
 #        thetaInDegrees=Theta*180/math.pi
         sys.path.insert(0,"Background Tools")
-        B=__import__(self.params.BackgroundAlgorithm)
+        import importlib
+        try:
+            importlib.reload(B)
+        except AttributeError as e:
+            B=__import__(self.params.BackgroundAlgorithm)
         BkgQ=B.BackgroundQ(self.H,self.K,self.L,self.params,index)
         if BkgQ.flag==1:
             return 3
@@ -440,4 +466,3 @@ class DataBackgroundQs(Dataset):
             print(e)
             print("no slice 2")
             return 1
-        

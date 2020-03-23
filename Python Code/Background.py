@@ -183,7 +183,7 @@ class Background():
 #        if 1==1:
             for i in range(0,len(rawData.Energy)):
                 j=numpy.argwhere(self.backgroundEnergy==rawData.Energy[i])
-#                print(j,self.backgroundIntensity[j])
+                #print(j,self.backgroundIntensity[j])
                 intensityAfterSubtractedBackground[i]=rawData.Intensity[i]-self.backgroundIntensity[j]-self.backgAdjustment
                 numPts=numPts+1
         except: 
