@@ -18,9 +18,12 @@ from Data import *
 class FitParameters:
 
     def __init__(self,fitResults,filenames):
-        self.filenames=filenames
+        self.filenames=list(filenames)
         self.pguess=fitResults
 
+    def initFromFitResults(self,fitResults):
+
+        return
 
     def writeToFile(self,params,filename):
         ParamTxtFile=open(filename,'w')
@@ -30,10 +33,11 @@ class FitParameters:
         AmplitudeForFirstFile=self.pguess[0:3*params.NumberofPeaks:3]
         ParamTxtFile.write(str(AmplitudeForFirstFile).strip('[]') + "\n"+ "\n")
         for i in range (1,len(self.filenames)):
-             ParamTxtFile.write(self.filenames[i] + "\n")
+            ParamTxtFile.write(self.filenames[i] + "\n")
 #             ParamTxtFile.write(str(self.pguess[(2+i)*self.NumberofPeaks:((3+i)*self.NumberofPeaks-1)]).strip('[]')) + "\n" + "\n")
-             ParamTxtFile.write((str(self.pguess[(2+i)*params.NumberofPeaks:((3+i)*self.NumberofPeaks-1)]).strip('[]')) + "\n" + "\n")
+            ParamTxtFile.write((str(self.pguess[((2+i)*params.NumberofPeaks):((3+i)*params.NumberofPeaks):1]).strip('[]')) + "\n" + "\n")
         ParamTxtFile.close()
+        return 
 
     def readFromFile(self,locationForOutputParam):
         self.locationForOutputParam=locationForOutputParam
@@ -71,7 +75,7 @@ class FitParameters:
         #read Wavevectors
         #read amplitudes
         return
-
+    
     def ReadExtendedLine(self,paramFileLineIndex,parameters):
         array=str.split(parameters[paramFileLineIndex])
         #print array
@@ -97,7 +101,8 @@ class InitialGuesses(FitParameters):
 
  
     def buildInitArray(self,NumberofPeaks,NumberofDatasets,positions):
-        
+#        print("numPeaks      ",self.NumberofPeaks,self.NumberofDatasets)
+#        print(self.amplitudes)
         for i in range (0,self.NumberofPeaks):
             self.pguess[3*i]=self.amplitudes[i]
             self.pguess[3*i+1]=self.positions[i]

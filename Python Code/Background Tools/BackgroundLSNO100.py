@@ -21,14 +21,12 @@ class BackgroundQ:
         self.index=index
         self.mult=1
         self.flag=0
-        if self.index>3:
-            self.flag=1
-            return
         #CalcQslash takes input in reciprocal angstoms, result returned in r.l.u
         self.Qslash=self.CalcQslash()
 #        self.fileName=str("H%5.2f K%5.2f L%5.2f" % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))
 #  REPLACE this line with the following that is commented out
-        self.fileName=str(RSE_Constants.FILENAME_FORMAT % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))    
+        if self.flag==0:
+            self.fileName=str(RSE_Constants.FILENAME_FORMAT % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))    
 
     def Qabs(self):
         Qx=self.H*2*math.pi/self.params.a
@@ -40,19 +38,19 @@ class BackgroundQ:
     def CalcQslash(self):
 
 #a-lattice param along proj.u, b- along proj.v
-# 510
-#5-10
-#6 0 0
-#6 -1 0
-#6 1 0
-#710
-#7-10
-       
-        hs=[-6,-5,-5.5,-6.5]
-        ks=[-5,-4,-4.5,-5.5]
 
+        if self.index>4:  #This statement controls when to stop generating Q's. In this 
+            self.flag=1    #example it will stop after 4 times (3+1).
+            Qslash=[0,0,0]
+            return
+
+        hs=[-6,-5,-6.5,-5,-6]
+        ks=[-5,-4,-5.5,-5,-4]
+            
         hslash=hs[self.index]
         kslash=ks[self.index]
+        self.mult=(self.H**2+self.K**2)/(hslash**2+kslash**2)
+
 
         lslash=0
 #        lslash=((self.Qabs()**2-(hslash*2*math.pi/self.params.a)**2-(kslash*2*math.pi/self.params.a)**2)**0.5)*self.params.c/(2*math.pi)

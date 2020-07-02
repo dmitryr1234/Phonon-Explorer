@@ -9,17 +9,18 @@ import os
 import math
 import time
 from numpy import *
-from WriteFinalParamToFile import *
 from plotDataWithFit import *
 from Background import *
 import matplotlib.pyplot as plt
 from RSE_Constants import *
 
 
-def Adjust(H,K,L,Adjustment, maxY):
+def Adjust(H,K,L,Intercept,slope, maxY, inFolder,T=0.1):
+    outFolder=params.folderForBkgSubtractedFiles
     filename=str(RSE_Constants.FILENAME_FORMAT % (H,K,L))
-    data=Dataset(params.folderForBkgSubtractedFiles,[filename])
-    data.SubtractConstant(Adjustment)
+    data=Dataset(inFolder,[filename])
+    data.DivideByBoseFactorNorm(T)
+    data.SubtractLine(Intercept,slope)
     dataFile=DataTextFile(params.folderForBkgSubtractedFiles,filename)
     dataFile.Write(data.Energy,data.Intensity,data.Error)
     plt.errorbar(data.Energy,data.Intensity,data.Error,fmt='o')
@@ -28,9 +29,9 @@ def Adjust(H,K,L,Adjustment, maxY):
     plt.ylabel(RSE_Constants.Y_LABEL)
     plt.title(filename)
                 #plt.axis([0, 40, 0, 0.0005])
-    plt.ylim((-0.001,maxY)) 
+    plt.ylim((-0.1*maxY,maxY)) 
     plt.grid() 
-    plt.savefig(params.folderForBkgSubtractedFiles+filename+'.pdf')
+    plt.savefig(outFolder+filename+'.pdf')
                 #plt.show()
     plt.close()
     return
@@ -38,18 +39,21 @@ def Adjust(H,K,L,Adjustment, maxY):
 #factor=input('Enter factor (1 or -1):')
 
 params=Parameters(RSE_Constants.INPUTS_PATH,RSE_Constants.INPUTS_FILENAME)
-
-#Qs=np.genfromtxt(params.folderForBkgSubtractedFiles+"BackgroundAdjustment.txt")
-Qs=np.genfromtxt(params.folderForBkgSubtractedFiles+"BackgroundAdjustment.txt")
-print(params.folderForBkgSubtractedFiles+"BackgroundAdjustment.txt")
+inFolder=params.folderForBkgSubtractedFiles
+Qs=np.genfromtxt(inFolder+"BackgroundAdjustment.txt")
+print(inFolder+"BackgroundAdjustment.txt")
 QHlist=Qs[:,][:,0]
 QKlist=Qs[:,][:,1]
 QLlist=Qs[:,][:,2]
-AdjustList=Qs[:,][:,3]
-
+InterceptList=Qs[:,][:,3]
+SlopeList=Qs[:,][:,4]
+try:
+    T=float(sys.argv[1])
+except:
+    T=0.001
+    
 for i in range(0,len(QHlist)):
-    print (AdjustList[i])
-    Adjust(QHlist[i],QKlist[i],QLlist[i],float(AdjustList[i]),params.maxY)
+    Adjust(QHlist[i],QKlist[i],QLlist[i],float(InterceptList[i]),float(SlopeList[i]),params.maxY,inFolder,T)
 
 folder=params.folderForBkgSubtractedFiles
 #PlotDataWithFitting=PlotDataWithFitParamCustomFolder(params,folder,folder,folder)

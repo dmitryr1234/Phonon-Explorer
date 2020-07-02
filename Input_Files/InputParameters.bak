@@ -7,29 +7,26 @@
 BkgMode=1
 
 
-
 #QMode=0 -- Generate cuts for a given reduced reciprocal wavevector
 #QMode=1 -- Generate cuts for a list of wavevector read from a file (textfile_for_selectedQs must be specified)
-QMode=0
+QMode=1
 
 #Name and directory for the sqw file or nix file
 #sqw_path=/SNS/ARCS/IPTS-24081/shared/combined-ipts22361/merged_mde_Ei110_T=5k_hhl_rotation.nxs
-#sqw_path=/SNS/ARCS/IPTS-24081/shared/combined/zz10_5K_110meV.nxs
-#sqw_path=E:\MantidDataFile\h0l_5K_116meV.nxs
 sqw_path=/media/ty/hitachi/SQW/FeP/FeP_60meV_5K.sqw
 
 
 
 #This is where the constant-energy cuts and everything else related to them (e.g. files 
 #for background calculations, background-subtracted cuts, plots, etc. are stored.
-#projectRootDir=/SNS/ARCS/IPTS-24081/shared/test/work-110meV-5K_00L/
 projectRootDir=/home/ty/research/projects/ins/v2/FeP/Y-point/
 
 
 
 #Dataset name. All data and its processing for a given set of cuts will be stored in this 
 #subdirectory (see instructions)
-ProcessedDataName=constant_q
+ProcessedDataName=constant_q/
+
 
 #Maximum allowed Ratio of Error to Intensity. Datapoints for which it is larger are thrown out (not saved) and do not count 
 #towards MinPointsInDataFile.
@@ -47,10 +44,10 @@ InputFilesDir=/home/ty/research/projects/ins/v2/FeP/Y-point/Input_Qpoints/
 
 #Energy start, end and step for contant Q cuts in Horace. Note that randomly generated 
 #cuts for background calculation will automatically have a bigger range.
+
 e_start=5
 e_end=50
 e_step=1
-
 
 #Binning
 Deltah=0.1
@@ -59,13 +56,13 @@ Deltal=0.1
 
 
 #UV matrix
+# Not used in the current version when reading from .nxs files (orientation is stored in the data file).
 Projection_u=1,0,0
 Projection_v=0,1,0
 
 
-
 #Minimum number of points in a data file. If the number of points with reasonable error 
-#bar is smaller, the cut is NOT saved.
+#bar (<30% of the value) is smaller, the cut is NOT saved.
 MinPointsInDataFile=5
 
 
@@ -73,9 +70,14 @@ MinPointsInDataFile=5
 #Maximum of the Y-axis (scattering intensity) for plots
 maxY=100
 
-#Name of the file with RawData class that reads data from the raw data file.
-rawDataClassFile=SQWAccess
-#rawDataClassFile=NXSAccessMantid
+
+#Path to the Mantid library (Needed only when nxs file is used)
+mantidFolder=/opt/Mantid/bin/mantid
+
+
+#Path to the folder with the Matlab routine Getslice (Needed only when sqw file is used)
+matlabFolder=/home/ty/research/projects/ins/v2/Phonon-Explorer/Matlab Code
+
 
 
 ## For reading qs from a file; Not needed for single reduced q mode
@@ -89,27 +91,21 @@ textfile_for_selectedQs=q_points
 ## For single reduced q slices; Not needed if qs are read from a file
 #reduced wavevector components. Not relevant if you want to look at wavevectors in the text file above.
 
-#qh=0.2
 qh=0
-qk=0
-ql=0.5
+qk=0.5
+ql=0
 
 
 #Define range in reciprocal space where you want to explore the data. The wavevectors are: 
 #(qh+H,qk+K,ql+L) Not relevant if you want to look at wavevectors in the text file above. H values are 
 #integers between h_start and h_end, etc.
-#h_start=0
-#h_end=0
-#k_start=-3
-#k_end=-5
-#l_start=-5
-#l_end=5
-h_start=1
-h_end=3
-k_start=1
-k_end=3
-l_start=-6
-l_end=-4
+h_start=-4
+h_end=4
+k_start=-3
+k_end=6
+l_start=-12
+l_end=6
+
 ######
 
 
@@ -125,7 +121,7 @@ NumberofIter=3
 
 
 
-#First character in the data file. H is hardcoded in current version and should not be 
+#First character in the data file. H is hardcoded in current version and should not be 
 #changed
 dataFileNameStart=H
 
@@ -146,7 +142,7 @@ NumberOfTries=100
 
 #Maximum number of Background files if they are generated randomly (as in the Standard module)
 
-maxFiles=0
+maxFiles=6
 
 
 #Approximate instrument resolution FWHM, used for smoothing of the background data. The 
@@ -161,6 +157,7 @@ Resolution=4
 #If the number of points with reasonable error #bar (<30% of the value) is smaller, the cut is NOT saved.
 
 MinPointsInDataBackgroundFile=5
+#10
 
 #Minimal peak width used in the smoothing of the background data. (see Release Notes)
 
@@ -174,13 +171,13 @@ BackgroundAlgorithm=Standard
 
 #########Parameters for multizone fit
 
-#Lower bound for peak width in the multizone fit
+#Lower bound for peak width in the multilane fit
 WidthLowerBound=0.75
-
 
 
 #Name of the file with position guesses for multizone fitting.
 fileWithGuesses=guesses
+
 
 #Algorithm used for calculating small q from Q
 SmallqAlgorithm=Orthorhombic

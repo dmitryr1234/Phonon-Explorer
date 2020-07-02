@@ -23,9 +23,11 @@ class BackgroundQ:
         self.flag=0
         #CalcQslash takes input in reciprocal angstoms, result returned in r.l.u
         self.Qslash=self.CalcQslash()
+#        print (self.Qslash)
 #        self.fileName=str("H%5.2f K%5.2f L%5.2f" % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))
 #  REPLACE this line with the following that is commented out
-        self.fileName=str(RSE_Constants.FILENAME_FORMAT % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))    
+        if self.flag==0:
+            self.fileName=str(RSE_Constants.FILENAME_FORMAT % (self.Qslash[0],self.Qslash[1],self.Qslash[2]))    
 
     def Qabs(self):
         Qx=self.H*2*math.pi/self.params.a
@@ -40,7 +42,6 @@ class BackgroundQ:
 
 #Users edit this function ONLY
 #
-
         if self.index>6: #This statement controls when to stop generating Q's. In this
             self.flag=1    #example it will stop after 7 times (6+1).
             return
@@ -71,4 +72,4 @@ class BackgroundQ:
         if self.H<-6 and hslash==-7:
             self.mult=1+(abs(self.H)-7)*.2
             
-        return Qslash
+        return [hslash,kslash,lslash]

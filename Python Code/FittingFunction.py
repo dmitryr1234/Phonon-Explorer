@@ -40,7 +40,7 @@ class FittingFunction:
                 AmplitudeIndex=str(3*self.NumberofPeaks+i)
                 PositionIndex=str(3*(m)+2)
                 WidthIndex=str(3*(m)+3)
-                self.char_funct=self.char_funct + '+ p'+AmplitudeIndex+'*numpy.exp(-(numpy.power(((Energy-p'+PositionIndex+'-'+s_shift+')/p'+WidthIndex+'),2)))'
+                self.char_funct=self.char_funct + '+(p'+AmplitudeIndex+'/p'+WidthIndex+')*numpy.exp(-(numpy.power(((Energy-p'+PositionIndex+'-'+s_shift+')/p'+WidthIndex+'),2)))'
       
     def buildfittingFunctionDeclaration(self):
         i=0 

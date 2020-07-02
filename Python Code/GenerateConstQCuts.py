@@ -22,12 +22,14 @@ params=Parameters(RSE_Constants.INPUTS_PATH, RSE_Constants.INPUTS_FILENAME)
 #print(params);
 
 if params.QMode==0:
+    dd=1
     testData=DataSmall_q(params, params.path_data)
 if params.QMode==1:
     testData=CollectionOfQs(params)
+print(params.path_data)
 testData.Generate()
 if params.BkgMode==0:
-    plot=Plot(params.maxY,params.path_data)
+    plot=Plot(params)
     plot.Plot()
     Disp=Display()
     Disp.MakePlotSummary(params.path_data,params.ProcessedDataName)

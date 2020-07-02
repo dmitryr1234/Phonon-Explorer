@@ -16,7 +16,6 @@ from RSE_Constants import *
 
 class Display:
     def MakePlotSummary(self,folder,subdir):
-        pass
         files_dir = folder
         name=RSE_Constants.NOT_STARTS_WITH+subdir+RSE_Constants.ALL_PLOTS
 #        if(1==1):
