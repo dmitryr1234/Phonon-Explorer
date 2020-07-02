@@ -40,7 +40,7 @@ class Dataset: #Dataset can be either a single cut at one Q or several cuts put 
     def initialize(self):
         sys.path.insert(0,"Tools to access raw data")
         R=__import__(self.params.rawDataClassFile)
-        RSE_Constants.rawData=R.RawData(self.params.sqw_path);
+        self.rawData=R.RawData(self.params.sqw_path);
         RSE_Constants.FLAG=1
 
         return
@@ -126,10 +126,10 @@ class Dataset: #Dataset can be either a single cut at one Q or several cuts put 
         bin_e[0]=bin_e[0]+self.params.Offset_E
         bin_e[2]=bin_e[2]+self.params.Offset_E
 
-        RSE_Constants.rawData.GetSlice(bin_h, bin_k, bin_l, bin_e, self.params.Projection_u, self.params.Projection_v)
-        self.Energy=RSE_Constants.rawData.Energy
-        self.Intensity=RSE_Constants.rawData.Intensity
-        self.Error=RSE_Constants.rawData.Error
+        self.rawData.GetSlice(bin_h, bin_k, bin_l, bin_e, self.params.Projection_u, self.params.Projection_v)
+        self.Energy=self.rawData.Energy
+        self.Intensity=self.rawData.Intensity
+        self.Error=self.rawData.Error
         
         self.clean()
         FileIsGood=self.dataIsValid(minPoints)

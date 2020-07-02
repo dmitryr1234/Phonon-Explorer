@@ -15,9 +15,9 @@ import os.path
 class RSE_Constants():
 
 
-    INPUTS_PATH_MAIN = os.path.normpath('/SNS/ARCS/IPTS-24081/shared/test/Phonon-Explorer/Input_Files')
+    INPUTS_PATH_MAIN = os.path.normpath('/home/ty/research/projects/ins/v2/Phonon-Explorer/Input_Files/')
     INPUTS_FILENAME_MAIN = r'InputParameters.txt'
-    FITTING_PARAM_FILE = r'_FittingParam.txt'
+    FITTING_PARAM_FILE = r'_FittingParam'
     
     INPUTS_PATH = INPUTS_PATH_MAIN
     INPUTS_FILENAME = r'InputParameters.txt'
@@ -34,7 +34,7 @@ class RSE_Constants():
     #Plots
     X_LABEL = r'Energy'
     Y_LABEL = r'Intensity'
-    SYMBOL = ['*','+','o','^','r*','r+','ro','r^','b*','b+','bo','b^','g*','g+','go','g^','*','+','o','^','r*','r+','ro','r^','b*','b+','bo','b^','g*','g+','go','g^','*','+','o','^','r*','r+','ro','r^','b*','b+','bo','b^','g*','g+','go','g^']
+    SYMBOL = ['bo','ro','go','b*','r*','g*','b+','r+','g+','b^','r^','g^','bo','ro','go','b*','r*','g*','b+','r+','g+','b^','r^','g^','bo','ro','go','b*','r*','g*','b+','r+','g+','b^','r^','g^','bo','ro','go','b*','r*','g*','b+','r+','g+','b^','r^','g^']
     
     #Raw Slices
     SLICE_TEMP_DIRECTORY = os.path.normpath('E:/TestData/450K_Data/Temp') #Not used in this version

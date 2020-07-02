@@ -29,6 +29,7 @@ class FittingData():
         self.NumberofPeaks=InitialGuesses.NumberofPeaks
         self.NumberofDatasets=InitialGuesses.NumberofDatasets
         self.FittingFunction=FittingFunction(InitialGuesses)
+        data.removeNAN()
         self.Energy=data.Energy
         self.Intensity=data.Intensity
         self.Error=data.Error
@@ -62,19 +63,27 @@ class FittingData():
         
         for ii in range (0,self.NumberofPeaks):
             LB[3*ii+2]=self.WidthLowerBound #Low bound of the widths must change with each experiment
-            UB[3*ii+2]=self.WidthLowerBound*7
+            UB[3*ii+2]=self.WidthLowerBound*6
             LB[3*ii+1]=self.InitialGuesses[3*ii+1]-PositionDelta
             UB[3*ii+1]=self.InitialGuesses[3*ii+1]+PositionDelta
-
         
 #        UB[0]=0.023
             
 #        UB[1]=self.InitialGuesses[1]+0.1
 #        LB[1]=self.InitialGuesses[1]-0.1
         param_bounds=(LB,UB)
-        for ind in range (1,self.NumberofIter):             
-#            popt, pcov = curve_fit(ff.func1, self.Energy, self.Intensity, p0=self.InitialGuesses,bounds=param_bounds,maxfev=100000)
-            popt, pcov = curve_fit(ff.func1, self.Energy, self.Intensity,sigma=self.Error, p0=self.InitialGuesses,bounds=param_bounds,xtol=5e-8,maxfev=2000)
+        popt=self.InitialGuesses
+        try:
+            for ind in range (1,self.NumberofIter):             
+#                popt, pcov = curve_fit(ff.func1, self.Energy, self.Intensity, p0=self.InitialGuesses,bounds=param_bounds,maxfev=100000)
+                popt, pcov = curve_fit(ff.func1, self.Energy, self.Intensity,sigma=self.Error, p0=self.InitialGuesses,bounds=param_bounds,xtol=1e-4,maxfev=4000)
+        except Exception as e:
+            print("Fit Failed")
+            print (self.InitialGuesses)
+            print (self.Energy)
+            print (self.Intensity)
+            print(e)
+            pcov=numpy.zeros((len(self.InitialGuesses),len(self.InitialGuesses)))
         del sys.modules['guru99']
         return popt, pcov
 
@@ -96,10 +105,10 @@ class FittingBackgroundData(FittingData):
             positions=numpy.append(positions,[data.Energy[lastEnergyIndex]])
 #        print(positions)
         params.positionGuesses=positions
-        params.NumberofPeaks=len(positions)
+        params.NumberofPeaks=len(positions)        
         params.InitWidthsFinal=params.MinPeakWidthForSmoothing
         params.WidthLowerBound=params.MinPeakWidthForSmoothing
         InitGuess=InitialGuesses(params,data)
-                
+        InitGuess.NumberofPeaks=len(positions) #overwrite
         FittingData.__init__(self,params,InitGuess,data)
 

@@ -43,12 +43,16 @@ class Parameters(TextFile):
         self.sqw_path=self.evalError(self.ParseByKeyword("sqw_path",parameters))
         self.dataFileType=self.sqw_path[self.sqw_path.index('.')+1:].lower()
         self.projectRootDir=self.evalError(self.ParseByKeyword("projectRootDir",parameters))
-        if self.dataFileType=="nxs":
-            self.mantidFolder=self.evalError(self.ParseByKeyword("mantidFolder",parameters))
-        if self.dataFileType=="sqw":
-            self.matlabFolder=self.evalError(self.ParseByKeyword("matlabFolder",parameters))
+#        self.dataAccessLibraryFolder=self.evalWarning(self.ParseByKeyword("dataAccessLibraryFolder",parameters),"")
+        self.rawDataClassFile=self.evalError(self.ParseByKeyword("rawDataClassFile",parameters))
+#        if self.dataFileType=="nxs":
+#            self.mantidFolder=self.evalError(self.ParseByKeyword("mantidFolder",parameters))
+#        if self.dataFileType=="sqw":
+#            self.matlabFolder=self.evalError(self.ParseByKeyword("matlabFolder",parameters))
         self.ProcessedDataName=self.evalError(self.ParseByKeyword("ProcessedDataName",parameters))
         self.path_data=self.evalError(self.ParseByKeyword("projectRootDir",parameters))+self.ProcessedDataName+'/good_slices/'
+        print(os.getcwd())
+        print(self.path_data)
         if not os.path.isdir(self.path_data):
             os.makedirs(self.path_data)
         #print(self.path_data)
@@ -74,10 +78,24 @@ class Parameters(TextFile):
         self.Deltah=eval(self.evalError(self.ParseByKeyword("Deltah",parameters)))
         self.Deltak=eval(self.evalError(self.ParseByKeyword("Deltak",parameters)))
         self.Deltal=eval(self.evalError(self.ParseByKeyword("Deltal",parameters)))
+
+        self.Offset_H=self.evalReaNoWarning(self.ParseByKeyword("Offset_H",parameters),0)
+        self.Offset_K=self.evalReaNoWarning(self.ParseByKeyword("Offset_K",parameters),0)
+        self.Offset_L=self.evalReaNoWarning(self.ParseByKeyword("Offset_L",parameters),0)
+        self.Offset_E=self.evalReaNoWarning(self.ParseByKeyword("Offset_E",parameters),0)
+
+        if not self.Offset_H==0 or not self.Offset_K==0 or not self.Offset_L==0 or not self.Offset_E==0:
+            print ("WARNING: Nonzero offsets for H,K,L,or E. Are you sure?????????")
+            print ("Offset_H:  ",self.Offset_H)
+            print ("Offset_K:  ",self.Offset_K)
+            print ("Offset_L:  ",self.Offset_L)
+            print ("Offset_E:  ",self.Offset_E)
+            
         self.MinPointsInDataFile=self.evalIntWarning(self.ParseByKeyword("MinPointsInDataFile",parameters),10)
         self.location_ForPlots=self.path_data
         self.maxY=eval(self.evalError(self.ParseByKeyword("maxY",parameters)))
         self.dataFileNameStart=self.evalWarning(self.ParseByKeyword("dataFileNameStart",parameters),"H")
+        self.folderForBkgSubtractedFiles=self.projectRootDir+self.ProcessedDataName+'/subtr_background/'
         
     def ReadBackgroundParams(self):
         with open(os.path.join(self.foldername,self.filename)) as f:
@@ -91,14 +109,13 @@ class Parameters(TextFile):
         self.NumberOfTries=self.evalIntWarning(self.ParseByKeyword("NumberOfTries",parameters),10)
         self.maxFiles=self.evalIntWarning(self.ParseByKeyword("maxFiles",parameters),10)
 #        self.Resolution=eval(self.evalError(self.ParseByKeyword("Resolution",parameters)))
-        self.MinPointsInDataBackgroundFile=self.evalIntWarning(self.ParseByKeyword("MinPointsInDataBackgroundFile",parameters),10)
-        
+        self.MinPointsInDataBackgroundFile=self.evalIntWarning(self.ParseByKeyword("MinPointsInDataBackgroundFile",parameters),10)   
         self.MinPeakWidthForSmoothing=eval(self.evalError(self.ParseByKeyword("MinPeakWidthForSmoothing",parameters)))
         self.InitWidthsFinal=self.MinPeakWidthForSmoothing
-        self.Resolution=self.MinPeakWidthForSmoothing
+        self.Resolution=eval(self.evalError(self.ParseByKeyword("Resolution",parameters)))
         self.BackgroundAlgorithm=self.evalWarning(self.ParseByKeyword("BackgroundAlgorithm",parameters),"Standard")
-        if self.BackgroundAlgorithm!="Standard":
-            self.maxFiles=2
+#        if self.BackgroundAlgorithm!="Standard":
+#            self.maxFiles=2
         self.NumberofPeaks=0
         self.ReadSharedParams(parameters)
 
@@ -106,29 +123,40 @@ class Parameters(TextFile):
         with open(os.path.join(self.foldername,self.filename)) as f:
              parameters = f.read().splitlines()
 
+        self.reducedQlist=[]
+        self.positionGuessesList=[]
         self.WidthLowerBound=eval(self.ParseByKeyword("WidthLowerBound",parameters))
         self.fileWithGuesses=self.evalError(self.ParseByKeyword("fileWithGuesses",parameters))
         self.InitWidthsFinal=self.WidthLowerBound
-
+        self.SmallqAlgorithm=self.evalError(self.ParseByKeyword("SmallqAlgorithm",parameters))
+        print(self.SmallqAlgorithm)
+        try:
+            f=open(self.path_InputFiles+self.fileWithGuesses)
+            f.close()
+        except:
+            print ("WARNING: Position Guesses not specified")
+        
         try:
 #        if 1==1:
             with open(self.path_InputFiles+self.fileWithGuesses) as f:
-                self.positionGuesses=[float(x) for x in next(f).split()]
+                self.positionGuessesList.append([float(x) for x in next(f).split()])
+                while True:
+                    self.reducedQlist.append([float(x) for x in next(f).split()])
+                    self.positionGuessesList.append([float(x) for x in next(f).split()])
+                    
 
-            self.NumberofPeaks=len(self.positionGuesses)
+#            self.NumberofPeaks=len(self.positionGuesses)
 #            print ("Position Guesses ",self.positionGuesses,"number of peaks ",self.NumberofPeaks)
         except:
-            print ("WARNING: Position Guesses not specified")
-
+            d=1   #dummy statement
+#
+        print(self.positionGuessesList)
         self.ReadSharedParams(parameters)
 
     def ReadSharedParams(self,parameters): #multizone and background
         self.locationForOutputParam=self.path_data
         self.InitAmplitudes=eval(self.ParseByKeyword("InitialAmplitude",parameters))
-        self.folderForBkgSubtractedFiles=self.projectRootDir+self.ProcessedDataName+'/subtr_background/'
         self.NumberofFitIter=self.evalIntWarning(self.ParseByKeyword("NumberofIter",parameters),3)
-
-
         
     def getIndex(self,keyword,parameters):
         for i in range(0,len(parameters)):
@@ -152,6 +180,12 @@ class Parameters(TextFile):
             return default
         else:
             return eval(string)
+    def evalReaNoWarning(self,string,default):
+        if string=="None":
+            return default
+        else:
+            return eval(string)
+ 
     def evalIntWarning(self,string,default):
         if string=="None":
             print("WARNING: "+self.keyword+" not specified")
@@ -167,8 +201,9 @@ class Parameters(TextFile):
 
     def evalError(self,string):
         if string=="None":
-            print("Parameter ERROR: "+ self.keyword+" not specified")
-            raise Exception("Parameter ERROR: "+self.keyword+" not specified")
+            strErr="Parameter ERROR: "+ self.keyword+" not specified"
+            print(strErr)
+            raise Exception(strErr)
         else:
             return string
         
@@ -191,5 +226,27 @@ class DataTextFile(TextFile):
         for i in range (0,len(Energy)):
             TxtFile.write(str(Energy[i])+'  '+str(Intensity[i])+'  '+str(Error[i])+'\n')
         TxtFile.close()
+
+class FitTextFile(TextFile):
+    def __init__(self,FolderName,FileName):
+        TextFile.__init__(self,FolderName,FileName)
         
+    def Read(self):
+#        print ('HERE  '+self.foldername+self.filename)
+        data=np.genfromtxt(self.foldername+self.filename)
+        return data
     
+    def Write(self, FitResultsArray):
+
+#        print os.path.isdir("E:/")
+        if not os.path.isdir(self.foldername):
+            os.makedirs(self.foldername)
+        np.savetxt(self.foldername+self.filename,FitResultsArray)
+        '''TxtFile=open(self.foldername+self.filename,'w+')
+        writeString=""
+        for i in range (0,len(FitResultsArray[0])):
+            for j in range (0,len(FitResultsArray)):
+                writeString=writeString+str(FitResultsArray[j][i]        
+            TxtFile.write(writeString+'\n')
+        TxtFile.close()'''
+
