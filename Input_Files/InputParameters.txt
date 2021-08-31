@@ -1,3 +1,4 @@
+
 ##NOTE: Comments start with "#" Parameter definitions that are commented out are additional examples.
 
 ########Parameters for generating cuts
@@ -10,58 +11,63 @@ BkgMode=1
 
 #QMode=0 -- Generate cuts for a given reduced reciprocal wavevector
 #QMode=1 -- Generate cuts for a list of wavevector read from a file (textfile_for_selectedQs must be specified)
-QMode=0
+QMode=1
 
-#Name and directory for the sqw file or nix file
-#sqw_path=/SNS/ARCS/IPTS-24081/shared/combined-ipts22361/merged_mde_Ei110_T=5k_hhl_rotation.nxs
+#Name and directory for the sqw file or nxs file
 #sqw_path=/SNS/ARCS/IPTS-24081/shared/combined/zz10_5K_110meV.nxs
-#sqw_path=E:\MantidDataFile\h0l_5K_116meV.nxs
-sqw_path=/media/ty/hitachi/SQW/FeP/FeP_60meV_5K.sqw
+sqw_path=H:/BAGAGE_22meV_461gen_20140517.sqw
 
+#HoracePath -- Needed on Linux only!! --  path to where the horace_on.m and herbert_on.m files are. not needed 
+#if rawDataClassFile != SQWAccess. It will be ignored on non-Linux OS.
+HoracePath=/usr/local/mprogs/Users/
 
 
 #This is where the constant-energy cuts and everything else related to them (e.g. files 
 #for background calculations, background-subtracted cuts, plots, etc. are stored.
-#projectRootDir=/SNS/ARCS/IPTS-24081/shared/test/work-110meV-5K_00L/
-projectRootDir=/home/ty/research/projects/ins/v2/FeP/Y-point/
+projectRootDir=E:/Bagage22/
+
 
 
 
 #Dataset name. All data and its processing for a given set of cuts will be stored in this 
 #subdirectory (see instructions)
-ProcessedDataName=constant_q
+ProcessedDataName=Bagage_22_TA_-6-7
 
 #Maximum allowed Ratio of Error to Intensity. Datapoints for which it is larger are thrown out (not saved) and do not count 
 #towards MinPointsInDataFile.
-ErrorToIntensityMaxRatio=0.5
 
-
-
+ErrorToIntensityMaxRatio=1.0
 
 
 #Directory where all input files except this file are stored. E.g. the text file listing 
 #Q-values to be explored.
-InputFilesDir=/home/ty/research/projects/ins/v2/FeP/Y-point/Input_Qpoints/
-
+#InputFilesDir=/SNS/ARCS/IPTS-24081/shared/test/work-110meV-5K_00L/Input/
+InputFilesDir=E:/Input_Files/
 
 
 #Energy start, end and step for contant Q cuts in Horace. Note that randomly generated 
 #cuts for background calculation will automatically have a bigger range.
-e_start=5
-e_end=50
-e_step=1
+
+e_start=0.25
+e_end=10.5
+e_step=0.25
+
+#0 0 -6
+#Offset_H=-0.02
+#Offset_L=-0.03
+#Offset_K=0.02
+#Offset_E=0
 
 
 #Binning
 Deltah=0.1
 Deltak=0.1
-Deltal=0.1
+Deltal=0.05
 
 
 #UV matrix
 Projection_u=1,0,0
 Projection_v=0,1,0
-
 
 
 #Minimum number of points in a data file. If the number of points with reasonable error 
@@ -71,18 +77,19 @@ MinPointsInDataFile=5
 
 
 #Maximum of the Y-axis (scattering intensity) for plots
-maxY=100
+#maxY=0.04
+maxY=4000
 
-#Name of the file with RawData class that reads data from the raw data file.
-rawDataClassFile=SQWAccess
+#Name of the file with RawData class that reads data from the raw data file. NOT USED IN THIS VERSION!!
+#rawDataClassFile=SQWAccess
 #rawDataClassFile=NXSAccessMantid
 
 
 ## For reading qs from a file; Not needed for single reduced q mode
 #textfile_for_selectedQs=bendingDispDiagSingle.txt
 
-textfile_for_selectedQs=q_points
-
+#textfile_for_selectedQs=Bagage_22_TA_0-3-5.txt
+textfile_for_selectedQs=Bagage_22_TA_-6-7.txt
 
 ######
 
@@ -90,33 +97,29 @@ textfile_for_selectedQs=q_points
 #reduced wavevector components. Not relevant if you want to look at wavevectors in the text file above.
 
 #qh=0.2
-qh=0
-qk=0
-ql=0.5
+qh=0.45
+qk=0.0
+ql=0.0
 
 
 #Define range in reciprocal space where you want to explore the data. The wavevectors are: 
 #(qh+H,qk+K,ql+L) Not relevant if you want to look at wavevectors in the text file above. H values are 
 #integers between h_start and h_end, etc.
-#h_start=0
-#h_end=0
-#k_start=-3
-#k_end=-5
-#l_start=-5
-#l_end=5
-h_start=1
-h_end=3
-k_start=1
-k_end=3
-l_start=-6
-l_end=-4
+
+h_start=4
+h_end=5
+k_start=4
+k_end=5
+l_start=2
+l_end=3
+
 ######
 
 
 ##############Shared between Background and Multizone fit
 
 #for fitting
-InitialAmplitude=0.01
+InitialAmplitude=100
 
 
 
@@ -125,7 +128,7 @@ NumberofIter=3
 
 
 
-#First character in the data file. H is hardcoded in current version and should not be 
+#First character in the data file. “H” is hardcoded in current version and should not be 
 #changed
 dataFileNameStart=H
 
@@ -146,16 +149,14 @@ NumberOfTries=100
 
 #Maximum number of Background files if they are generated randomly (as in the Standard module)
 
-maxFiles=0
+maxFiles=10
 
 
 #Approximate instrument resolution FWHM, used for smoothing of the background data. The 
 #best values here are a bit larger than the actual resolution, but ultimately it should be 
-#such that the smoothing of the background files works well.
+#such that Gaussian smoothing of the background files works well.
 
-Resolution=4
-
-
+Resolution=1.5
 
 #Minimum number of points in a background data file. 
 #If the number of points with reasonable error #bar (<30% of the value) is smaller, the cut is NOT saved.
@@ -164,23 +165,23 @@ MinPointsInDataBackgroundFile=5
 
 #Minimal peak width used in the smoothing of the background data. (see Release Notes)
 
-MinPeakWidthForSmoothing=5
+# MinPeakWidthForSmoothing=1.5  NOT active in version 1.2
 
-
+ErrorToIntensityMaxRatio=1
 
 #Algorithm used for calculating background (see release notes)
-#BackgroundAlgorithm=Background70meVQ0x25
+#BackgroundAlgorithm=Background80meVQ
 BackgroundAlgorithm=Standard
 
 #########Parameters for multizone fit
 
 #Lower bound for peak width in the multizone fit
-WidthLowerBound=0.75
+WidthLowerBound=0.6
 
 
 
 #Name of the file with position guesses for multizone fitting.
-fileWithGuesses=guesses
+fileWithGuesses=_PositionGuesses_Bagage22LAhr.txt
 
 #Algorithm used for calculating small q from Q
-SmallqAlgorithm=Orthorhombic
+SmallqAlgorithm=Cubic
